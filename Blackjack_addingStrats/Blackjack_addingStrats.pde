@@ -229,10 +229,11 @@ String basicStrategy(int dealerCard, int myHandVal, boolean isSoft, boolean canS
 String basicStrategyUpdate(Hand dealerHand, Hand playerHand) {//(int dealerCard, int myHandVal, boolean isSoft, boolean canSplit) {
   int dhVal=dealerHand.value();
   int phVal=playerHand.value();
-
+  String strat;
+  
   Table table;
   int row;
-  int column=dealerHand.value()-2;
+  int column=dhVal-2;
   if (phVal==21) {
     return("S");
   }
@@ -249,8 +250,15 @@ String basicStrategyUpdate(Hand dealerHand, Hand playerHand) {//(int dealerCard,
     table=hardTable;
     row=phVal-4;
   }
-  String ans=table.getString(row, column);
-  return ans;
+  String tableVal=table.getString(row, column);
+  if (!surrenderAllowed && tableVal.equals("RH")) {
+    strat="H";
+  } else if (!splitToDoubleAllowed && tableVal.equals("PH")) {
+    strat="P";
+  } else {
+    strat=tableVal;
+  }
+  return strat;
 }
 
 String dealerStrategy(int dealerHandVal) {
