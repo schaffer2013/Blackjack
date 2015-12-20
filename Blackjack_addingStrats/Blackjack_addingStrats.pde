@@ -3,6 +3,9 @@ Table softTable;
 Table splitTable;
 PFont f;
 
+boolean surrenderAllowed=false;
+boolean splitToDoubleAllowed=false;
+
 int noOfDecks=2;
 int noOfCards=52;
 int cardIndex=0;
@@ -74,7 +77,10 @@ class Card { //A card has a value and a suit
 class Hand {
   Card[] cards= {
   }; // Start hand with zero cards
-
+  
+  boolean isSoft=(value()==rawVal)&&aceCount>0;
+  boolean canSplit=canSplit();
+  
   Hand () { // No parameters to make a hand.
   }
 
@@ -134,8 +140,7 @@ class Hand {
         aceCount++;
       }
     }
-    boolean isSoft=(value()==rawVal)&&aceCount>0;
-    if (isSoft){
+    if (isSoft) {
       println("Soft");
     }
     return basicStrategy(dealerCard, value(), isSoft, canSplit());
@@ -216,6 +221,33 @@ String basicStrategy(int dealerCard, int myHandVal, boolean isSoft, boolean canS
   } else {
     table=hardTable;
     row=myHandVal-4;
+  }
+  String ans=table.getString(row, column);
+  return ans;
+}
+
+String basicStrategyUpdate(Hand dealerHand, Hand playerHand) {//(int dealerCard, int myHandVal, boolean isSoft, boolean canSplit) {
+  int dhVal=dealerHand.value();
+  int phVal=playerHand.value();
+
+  Table table;
+  int row;
+  int column=dealerHand.value()-2;
+  if (phVal==21) {
+    return("S");
+  }
+  if (phVal>21) {
+    return("B");
+  }
+  if (playerHand.isSoft) {
+    table=softTable;
+    row=phVal-13;
+  } else if (playerHand.canSplit) {
+    table=splitTable;
+    row=round(phVal/2)-2;
+  } else {
+    table=hardTable;
+    row=phVal-4;
   }
   String ans=table.getString(row, column);
   return ans;
