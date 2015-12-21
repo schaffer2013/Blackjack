@@ -77,10 +77,9 @@ class Card { //A card has a value and a suit
 class Hand {
   Card[] cards= {
   }; // Start hand with zero cards
-  
-  boolean isSoft=(value()==rawVal)&&aceCount>0;
+
   boolean canSplit=canSplit();
-  
+
   Hand () { // No parameters to make a hand.
   }
 
@@ -140,6 +139,7 @@ class Hand {
         aceCount++;
       }
     }
+    boolean isSoft=(value()==rawVal)&&aceCount>0;
     if (isSoft) {
       println("Soft");
     }
@@ -230,7 +230,7 @@ String basicStrategyUpdate(Hand dealerHand, Hand playerHand) {//(int dealerCard,
   int dhVal=dealerHand.value();
   int phVal=playerHand.value();
   String strat;
-  
+
   Table table;
   int row;
   int column=dhVal-2;
